@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Afterski 40 – Admin</title>
+  <style>
+    :root{
+      --bg0:#050e1b;
+      --glass: rgba(7, 18, 42, .40);
+      --stroke: rgba(255,255,255,.16);
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:#fff;
+      background: radial-gradient(1200px 650px at 30% 0%, #0e63d8 0%, #081a34 60%, #050e1b 100%);
+      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    }
+    .wrap{max-width:980px;margin:0 auto;padding:18px}
+    .card{
+      background: var(--glass);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow:hidden;
+      position:relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.28));
+      pointer-events:none;
+    }
+    .inner{position:relative;z-index:1;padding:16px}
+    h1{margin:0 0 10px;font-size:22px;letter-spacing:-.2px}
+    .row{display:grid;grid-template-columns:1fr 1fr; gap:10px}
+    @media (max-width:720px){.row{grid-template-columns:1fr}}
+    .stat{padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.08);font-weight:900}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{text-align:left;padding:10px;border-bottom:1px solid rgba(255,255,255,.10);font-size:14px}
+    th{opacity:.9}
+    .muted{opacity:.85}
+    .btn{
+      appearance:none;border:0;
+      padding:10px 12px;border-radius:12px;
+      font-weight:900;cursor:pointer;color:#fff;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.16);
+    }
+    .topbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .pill{padding:8px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);font-weight:900}
+    a{color:inherit}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="inner">
+        <div class="topbar">
+          <div>
+            <h1>Påmeldinger – Afterski 40</h1>
+            <div class="muted">Skjult admin-side. URL: <code>/admin.html</code></div>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <span class="pill" id="lastUpdated">Oppdaterer…</span>
+            <button class="btn" id="refreshBtn">Oppdater</button>
+            <button class="btn" id="csvBtn">Last ned CSV</button>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:12px">
+          <div class="stat">Kommer: <span id="countYes">–</span></div>
+          <div class="stat">Kommer ikke: <span id="countNo">–</span></div>
+        </div>
+
+        <div class="muted" style="margin-top:12px;line-height:1.5">
+          Denne siden leser fra Supabase med <b>anon key</b>.
+          For at den skal fungere må tabellen <code>public.rsvps</code> ha RLS aktivert og en policy som tillater SELECT (lesing).
+        </div>
+
+        <table aria-label="påmeldinger">
+          <thead>
+            <tr>
+              <th>Tidspunkt</th>
+              <th>Navn</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+            <tr><td colspan="3" class="muted">Laster…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+    const supabaseUrl = "https://lbmzdetaobrgqnevlmwi.supabase.co";
+    const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxibXpkZXRhb2JyZ3FuZXZsbXdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg1MDMwMDYsImV4cCI6MjA4NDA3OTAwNn0.6nVF1hmDDQZ5iF22mCkfGX0eBKpAP129ceXgUIKtRLA";
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const elYes = document.getElementById("countYes");
+    const elNo = document.getElementById("countNo");
+    const tbody = document.getElementById("tbody");
+    const lastUpdated = document.getElementById("lastUpdated");
+
+    function fmt(ts) {
+      try {
+        const d = new Date(ts);
+        return d.toLocaleString("no-NO", { dateStyle: "short", timeStyle: "short" });
+      } catch {
+        return ts || "";
+      }
+    }
+
+    function setUpdated() {
+      lastUpdated.textContent = "Oppdatert " + new Date().toLocaleTimeString("no-NO", { timeStyle: "short" });
+    }
+
+    function toCSV(rows) {
+      const header = ["created_at","name","coming"];
+      const lines = [header.join(",")];
+      for (const r of rows) {
+        const line = [
+          JSON.stringify(r.created_at ?? ""),
+          JSON.stringify(r.name ?? ""),
+          JSON.stringify(r.coming ?? "")
+        ].join(",");
+        lines.push(line);
+      }
+      return lines.join("\n");
+    }
+
+    async function load() {
+      tbody.innerHTML = '<tr><td colspan="3" class="muted">Laster…</td></tr>';
+
+      const { data, error } = await supabase
+        .from("rsvps")
+        .select("created_at,name,coming")
+        .order("created_at", { ascending: false })
+        .limit(500);
+
+      if (error) {
+        tbody.innerHTML = '<tr><td colspan="3" class="muted">Kunne ikke lese påmeldinger. Sjekk RLS-policy i Supabase.</td></tr>';
+        elYes.textContent = "–";
+        elNo.textContent = "–";
+        console.error(error);
+        return;
+      }
+
+      const yes = data.filter(r => r.coming === true).length;
+      const no = data.filter(r => r.coming === false).length;
+      elYes.textContent = String(yes);
+      elNo.textContent = String(no);
+
+      if (!data.length) {
+        tbody.innerHTML = '<tr><td colspan="3" class="muted">Ingen påmeldinger ennå.</td></tr>';
+      } else {
+        tbody.innerHTML = data.map(r => `
+          <tr>
+            <td>${fmt(r.created_at)}</td>
+            <td>${(r.name||"")}</td>
+            <td>${r.coming ? "Kommer" : "Kommer ikke"}</td>
+          </tr>
+        `).join("");
+      }
+
+      // CSV button
+      document.getElementById("csvBtn").onclick = () => {
+        const csv = toCSV(data);
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "afterski40-pameldinger.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      };
+
+      setUpdated();
+    }
+
+    document.getElementById("refreshBtn").addEventListener("click", load);
+    await load();
+  </script>
+</body>
+</html>

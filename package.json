@@ -1,0 +1,8 @@
+{
+  "name": "afterski-40-netlify",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}

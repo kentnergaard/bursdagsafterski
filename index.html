@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Kents Afterski 40</title>
+  <meta name="description" content="Invitasjon til Kents afterski 40-års bursdag på Presthus gård." />
+  <meta property="og:title" content="Kents Afterski 40" />
+  <meta property="og:description" content="Presthus gård • 25.04.2026 • kl. 14:00" />
+  <meta property="og:image" content="/assets/invite.png" />
+
+  <style>
+    :root {
+      --glass: rgba(7, 18, 42, .40);
+      --stroke: rgba(255,255,255,.16);
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --radius: 22px;
+      --hero-bg: url("assets/invite.png");
+      --poster-w: min(1040px, 100%);
+      --deep: #0a2c5f;
+      --deep2:#08306f;
+      --ice:#e9f7ff;
+      --ice2:#cfeeff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(1200px 650px at 30% 0%, #0e63d8 0%, #081a34 60%, #050e1b 100%);
+      color: #fff;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      padding: env(safe-area-inset-top) 0 calc(24px + env(safe-area-inset-bottom));
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+    .hero::before {
+      content: "";
+      position: absolute; inset: -60px;
+      background-image: var(--hero-bg);
+      background-size: cover;
+      background-position: center top;
+      filter: saturate(1.08) contrast(1.06);
+      transform: scale(1.02);
+      z-index: -3;
+    }
+    .hero::after {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(900px 520px at 35% 5%, rgba(20,120,255,.22) 0%, rgba(0,0,0,0) 55%),
+        linear-gradient(180deg, rgba(3,10,24,.10), rgba(3,10,24,.62) 55%, rgba(3,10,24,.88));
+      z-index: -2;
+    }
+
+    .snow {
+      position: absolute; inset: 0; pointer-events:none; z-index:-1;
+      opacity: .55;
+      background-image:
+        radial-gradient(2px 2px at 20% 10%, rgba(255,255,255,.85) 60%, transparent 61%),
+        radial-gradient(1.4px 1.4px at 70% 30%, rgba(255,255,255,.75) 60%, transparent 61%),
+        radial-gradient(2px 2px at 40% 60%, rgba(255,255,255,.70) 60%, transparent 61%),
+        radial-gradient(1.2px 1.2px at 85% 80%, rgba(255,255,255,.78) 60%, transparent 61%),
+        radial-gradient(1.8px 1.8px at 10% 75%, rgba(255,255,255,.72) 60%, transparent 61%);
+      background-size: 260px 260px;
+      animation: drift 14s linear infinite;
+    }
+    @keyframes drift { from { transform: translateY(-18px); } to { transform: translateY(18px); } }
+
+    .poster { width: var(--poster-w); position: relative; }
+    .posterText {
+      padding: clamp(18px, 2.6vw, 26px) clamp(16px, 2.4vw, 26px) 0;
+      text-align: center;
+    }
+
+    .topline {
+      font-style: italic;
+      font-weight: 900;
+      font-size: clamp(16px, 2.2vw, 30px);
+      text-shadow: 0 12px 30px rgba(0,0,0,.35);
+      opacity: .96;
+    }
+
+    /* Bubble-ish AFTERSKI */
+    .afterWrap {
+      display: inline-block;
+      position: relative;
+      position: relative;
+      margin-top: clamp(10px, 1.3vw, 14px);
+      filter: drop-shadow(0 18px 26px rgba(0,0,0,.28));
+    }
+
+    .afterWrap::before {
+      content:"";
+      position:absolute;
+      left:50%; top:55%;
+      width: 120%; height: 85%;
+      transform: translate(-50%,-50%);
+      background: radial-gradient(closest-side, rgba(215,245,255,.55), rgba(20,120,255,.22), rgba(0,0,0,0));
+      filter: blur(18px);
+      opacity: .9;
+      z-index: 0;
+      pointer-events:none;
+    }
+
+    .afterMain {
+      position: relative;
+      z-index: 1;
+
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: -1.2px;
+      font-size: clamp(56px, 9.3vw, 132px);
+      line-height: .88;
+      margin: 0;
+      /* gradient fill like poster */
+      background: linear-gradient(180deg, #ffffff 0%, var(--ice) 35%, var(--ice2) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      /* thick outline with many shadows = bubble */
+      text-shadow:
+        /* dark outer outline */
+        -3.5px 0 var(--deep), 3.5px 0 var(--deep), 0 -3.5px var(--deep), 0 3.5px var(--deep),
+        -3px -3px var(--deep), 3px 3px var(--deep), -3px 3px var(--deep), 3px -3px var(--deep),
+        /* second outline */
+        -6px 0 var(--deep2), 6px 0 var(--deep2), 0 -6px var(--deep2), 0 6px var(--deep2),
+        -5px -5px var(--deep2), 5px 5px var(--deep2), -5px 5px var(--deep2), 5px -5px var(--deep2),
+        /* soft glow */
+        0 0 18px rgba(215,245,255,.42),
+        0 10px 30px rgba(0,0,0,.35);
+    }
+
+    /* inner highlight stroke illusion */
+    .afterMain::after {
+      content: "AFTERSKI";
+      position: absolute;
+      left: 0; top: 0;
+      width: 100%;
+      height: 100%;
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.15));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      opacity: .45;
+      pointer-events: none;
+      filter: blur(.2px);
+      text-shadow: none;
+    }
+
+    .subline {
+      margin: 6px 0 0;
+      font-weight: 1000;
+      letter-spacing: -.6px;
+      font-size: clamp(28px, 4.4vw, 66px);
+      color: #dff2ff;
+      text-shadow:
+        0 10px 26px rgba(0,0,0,.32),
+        -1.5px 0 var(--deep), 1.5px 0 var(--deep), 0 -1.5px var(--deep), 0 1.5px var(--deep);
+    }
+
+    .place {
+      margin: 10px 0 0;
+      font-weight: 1000;
+      font-size: clamp(20px, 3.2vw, 44px);
+      color: #dff2ff;
+      text-shadow:
+        0 10px 26px rgba(0,0,0,.25),
+        -1.2px 0 var(--deep), 1.2px 0 var(--deep), 0 -1.2px var(--deep), 0 1.2px var(--deep);
+    }
+    .date {
+      margin: 10px 0 0;
+      font-weight: 1000;
+      font-size: clamp(14px, 2.0vw, 26px);
+      opacity: .92;
+      letter-spacing: .2px;
+      text-shadow: 0 10px 24px rgba(0,0,0,.28);
+    }
+
+    .grid {
+      width: var(--poster-w);
+      margin-top: clamp(14px, 2.2vw, 20px);
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--glass);
+      position: relative;
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+    .card::before {
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,.28));
+      pointer-events:none;
+    }
+    .inner { position: relative; z-index: 1; }
+    .inner { padding: 18px; }
+    @media (max-width: 420px) { .inner { padding: 16px; } }
+
+    .prose {
+      margin: 0;
+      white-space: pre-wrap;
+      line-height: 1.62;
+      font-size: clamp(16px, 1.9vw, 19px);
+      opacity: .96;
+      text-shadow: 0 8px 20px rgba(0,0,0,.35);
+    }
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-weight: 950;
+      letter-spacing: -.2px;
+    }
+    .muted { opacity: .86; }
+
+    /* RSVP minimal: name + coming */
+    form { display: grid; gap: 10px; margin-top: 10px; }
+    label { font-weight: 900; font-size: 13px; opacity: .92; }
+    input, select {
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(2, 10, 24, .35);
+      color: #fff;
+      outline: none;
+    }
+    .btn {
+      appearance: none;
+      border: 0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 950;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(180deg, rgba(35,145,255,.98), rgba(8,70,185,.98));
+      border: 1px solid rgba(255,255,255,.18);
+      box-shadow: 0 14px 30px rgba(0,0,0,.35);
+    }
+    .btn.secondary { background: rgba(255,255,255,.10); }
+    .btn:active { transform: translateY(1px); }
+
+    .success, .error {
+      padding: 12px;
+      border-radius: 16px;
+      font-weight: 900;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.25);
+      margin-bottom: 10px;
+    }
+    .footer {
+      width: var(--poster-w);
+      margin: 14px auto 0;
+      opacity: .82;
+      font-size: 13px;
+      text-align: center;
+      padding-bottom: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <main class="hero">
+    <div class="snow"></div>
+
+    <div class="poster">
+      <div class="posterText">
+        <div class="topline">Invitasjon til Kent's</div>
+
+        <div class="afterWrap">
+          <h1 class="afterMain">AFTERSKI</h1>
+        </div>
+
+        <div class="subline">40-års bursdag</div>
+        <div class="place">Presthus gård</div>
+        <div class="date" id="dateLine"></div>
+      </div>
+
+      <div class="grid">
+        <section class="card" aria-label="Invitasjonstekst">
+          <div class="inner">
+            <h2 class="section-title">Dette er opplegget</h2>
+            <p class="prose">Jeg har vært ufattelig heldig. På 40 år har jeg vært heldig å omgås fantastisk fine mennesker HELE LIVET – i oppveksten, på jobb, på fest, på tur og i settinger som definitivt startet med "Vi tar oss en øl bare..." Nå tenker jeg det er på tide å samle mest mulig av dette fargefulle og livlige persongalleriet på ett og samme sted. Jeg fyller 40 og inviterer til afterski. Og som alle vet: Afterski starter i rett tid. Riktig tid er tidlig. Derfor starter vi tidlig. Dvs. Min favoritt... Dagsfylla! Det blir afterski-band. Det blir høy stemning. Det blir historier som var gode i utgangspunktet – og som blir helt fantastiske utover dagen. Antrekk? Afterski. Dømmekraft? Varierende. Sluttid? Helt uinteressant.</p>
+          </div>
+        </section>
+
+        <section class="card" id="rsvp" aria-label="Påmelding">
+          <div class="inner">
+            <h2 class="section-title">Påmelding</h2>
+            <p class="muted" style="margin:0 0 10px; line-height:1.5">
+              Skriv navnet ditt og si at du kommer. Enkelt og vakkert.
+            </p>
+
+            <div id="msg"></div>
+
+            <form id="rsvpForm">
+              <input type="text" name="company" autocomplete="off" tabindex="-1" style="display:none" />
+
+              <div>
+                <label>Navn</label>
+                <input name="name" required minlength="2" placeholder="Fornavn Etternavn" />
+              </div>
+
+              <div>
+                <label>Kommer du?</label>
+                <select name="coming" required>
+                  <option value="ja">Ja 🥳</option>
+                  <option value="nei">Nei 😢</option>
+                </select>
+              </div>
+
+              <button class="btn" type="submit">Send</button>
+              <div class="muted" style="font-size:12px">
+                (Ingen spam. Bare oversikt.)
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+
+      <div class="footer">© Kent’s Afterski 40 — Presthus gård</div>
+    </div>
+  </main>
+  </div>
+
+  <script>
+    const EVENT = { dateText: "25.04.2026", timeText: "kl. 14:00" };
+    document.getElementById("dateLine").textContent = EVENT.dateText + " " + EVENT.timeText;
+
+    const form = document.getElementById("rsvpForm");
+    const msg = document.getElementById("msg");
+
+    function setMsg(type, text) {
+      msg.innerHTML = type ? '<div class="' + type + '">' + text + '</div>' : "";
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setMsg("", "");
+
+      const fd = new FormData(form);
+      const payload = Object.fromEntries(fd.entries());
+
+      const last = Number(localStorage.getItem("rsvp_last") || "0");
+      if (Date.now() - last < 8000) {
+        return setMsg("error", "Rolig nå, sjef. Prøv igjen om et par sekunder.");
+      }
+
+      try {
+        const res = await fetch("/.netlify/functions/rsvp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const ct = (res.headers.get("content-type") || "").toLowerCase();
+        let data = null;
+        let text = "";
+
+        if (ct.includes("application/json")) {
+          data = await res.json();
+        } else {
+          text = await res.text();
+        }
+
+        if (!res.ok) {
+          throw new Error((data && data.error) || text || ("HTTP " + res.status));
+        }
+        if (data && data.ok === false) {
+          throw new Error(data.error || "Noe gikk galt");
+        }
+
+        localStorage.setItem("rsvp_last", String(Date.now()));
+        form.reset();
+        setMsg("success", "Registrert ✅ Vi sees!");
+      } catch (err) {
+        setMsg("error", "Oops: " + (err.message || "Kunne ikke sende."));
+      }
+    });
+  </script>
+</body>
+</html>
